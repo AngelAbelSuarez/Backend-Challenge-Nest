@@ -17,17 +17,17 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<User> {
+  async findById(@Param('id') id: string): Promise<User | undefined> {
     return this.usersService.findById(Number(+id));
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUser: Partial<User>) {
+  async update(@Param('id') id: string, @Body() updateUser: Partial<User>): Promise<User> {
     return this.usersService.update(+id, updateUser);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
-    return this.usersService.remove(+id);
+    return this.usersService.delete(+id);
   }
 }
