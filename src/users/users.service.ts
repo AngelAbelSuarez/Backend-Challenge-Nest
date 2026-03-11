@@ -14,17 +14,17 @@ export class UsersService {
     return this.usersRepository.findAll();
   }
 
-  async findById(id: number): Promise<RespondUserDto | undefined> {
+  async findById(id: string): Promise<RespondUserDto | undefined> {
     const user = await this.usersRepository.findById(id);
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<RespondUserDto> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<RespondUserDto> {
     const user = await this.usersRepository.update(id, updateUserDto);
     return user
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     return await this.usersRepository.delete(id);
   }
 }

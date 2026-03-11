@@ -29,7 +29,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Return the user.', type: RespondUserDto })
   @ApiResponse({ status: 404, description: 'User not found.' })
   async findById(@Param('id') id: string): Promise<RespondUserDto | undefined> {
-    return this.usersService.findById(Number(+id));
+    return this.usersService.findById(id);
   }
 
   @Patch(':id')
@@ -39,7 +39,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'The user has been successfully updated.', type: RespondUserDto })
   @ApiResponse({ status: 404, description: 'User not found.' })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<RespondUserDto> {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
@@ -48,6 +48,6 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'The user has been successfully deleted.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
   async remove(@Param('id') id: string): Promise<boolean> {
-    return this.usersService.delete(+id);
+    return this.usersService.delete(id);
   }
 }
