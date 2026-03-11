@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class User {
+export class RespondUserDto {
     @ApiProperty({ example: 1, description: 'The unique identifier of the user' })
     id: number;
 
@@ -10,13 +10,9 @@ export class User {
     @ApiProperty({ example: 'john.doe@example.com', description: 'The email address of the user' })
     email: string;
 
-    @ApiProperty({ example: 'strongpassword123', description: 'The password of the user' })
-    password: string;
-
-    constructor(user: User){
+    constructor(user: RespondUserDto){
         this.id = user.id;
         this.name = user.name;
         this.email = user.email;
-        this.password = user.password;
     }
 }
