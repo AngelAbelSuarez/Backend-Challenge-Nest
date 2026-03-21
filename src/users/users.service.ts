@@ -1,43 +1,84 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { CreateUserDto, UpdateUserDto, RespondUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto, RespondUserDto, RespondUserDragonBallZDto } from './dto';
 
 @Injectable()
 export class UsersService {
   constructor(private usersRepository: UsersRepository) { }
 
-async create(createUserDto: CreateUserDto): Promise<RespondUserDto> {
+  async create(createUserDto: CreateUserDto): Promise<RespondUserDto> {
 
-  const email = await this.usersRepository.findByEmail(createUserDto.email);
+    const email = await this.usersRepository.findByEmail(createUserDto.email);
 
-  if (email) {
-    throw new ConflictException('Email already exists');
+    if (email) {
+      throw new ConflictException('Email already exists');
+    }
+
+    const user = await this.usersRepository.create(createUserDto);
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      dragonBallZIds: user.dragonBallZIds || [],
+    };
   }
-
-  const user = await this.usersRepository.create(createUserDto);
-
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-  };
-}
 
   async findAll(): Promise<RespondUserDto[]> {
     return await this.usersRepository.findAll();
   }
 
-  async findById(id: string): Promise<RespondUserDto | undefined> {
+  async findByIdwIThDragonBallZ(id: string): Promise<RespondUserDragonBallZDto | undefined> {
     const user = await this.usersRepository.findById(id);
-    return user;
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    let dragonBallZCharacters;
+
+    if (user.dragonBallZIds && user.dragonBallZIds.length > 0) {
+      dragonBallZCharacters = await this.usersRepository.findCharacters(user.dragonBallZIds);
+    }
+
+    const userWithCharacters = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      dragonBallZCharacters: dragonBallZCharacters || [],
+    };
+
+    return userWithCharacters;
+
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<RespondUserDto> {
-    const user = await this.usersRepository.update(id, updateUserDto);
+  async findById(id: string): Promise<RespondUserDto | undefined> {
+    const user = await this.usersRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
     return user
   }
 
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<RespondUserDto> {
+    const userUpdated = await this.usersRepository.update(id, updateUserDto);
+    if (!userUpdated) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return userUpdated
+  }
+
   async delete(id: string): Promise<boolean> {
-    return await this.usersRepository.delete(id);
+    const user = await this.usersRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    const result = await this.usersRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return true
   }
 }

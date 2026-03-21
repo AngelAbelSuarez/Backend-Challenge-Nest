@@ -3,19 +3,23 @@ import { User } from "./entities/user.entity";
 import { CreateUserDto, UpdateUserDto, RespondUserDto } from './dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { ClientsDragonBallZ } from "src/ClientsDragonBallZ/clients.service";
+import { CharacterDto } from "src/ClientsDragonBallZ/dto/character.dto";
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UsersRepository {
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>
+        private userRepository: Repository<User>,
+        private clientsDragonBallZ: ClientsDragonBallZ
     ) { }
 
     async create(createUserDto: CreateUserDto): Promise<User> {
         const user = this.userRepository.create(createUserDto);
         return this.userRepository.save(user);
     }
-    
+
     async findByEmail(email: string): Promise<User | null> {
         return this.userRepository.findOneBy({ email });
     }
@@ -25,31 +29,25 @@ export class UsersRepository {
         return users
     }
 
-    async findById(id: string): Promise<RespondUserDto | undefined> {
+    async findCharacters(ids: number[] ): Promise<CharacterDto[]> {
+        const characters = await this.clientsDragonBallZ.getCharacterByIds(ids);
+        return characters
+    }
+
+
+    async findById(id: string): Promise<RespondUserDto | null> {
         const user = await this.userRepository.findOneBy({ id });
-        if (!user) {
-            throw new NotFoundException(`User with id ${id} not found`);
-        }
-        return new RespondUserDto(user);
+        return user
     }
 
 
-    async update(id: string, updateUserDto: UpdateUserDto): Promise<RespondUserDto> {
-        const user = await this.userRepository.findOneBy({ id });
-        if (!user) {
-            throw new NotFoundException(`User with id ${id} not found`);
-        }
-        await this.userRepository.update(id, updateUserDto);
-        return user;
+    async update(id: string, updateUserDto: UpdateUserDto): Promise<RespondUserDto | null> {
+        return await this.userRepository.findOneBy({ id });      
     }
 
-    async delete(id: string): Promise<boolean> {
-        const deleteResult = await this.userRepository.delete(id)
-        if (deleteResult.affected === 0) {
-            throw new NotFoundException(`User with id ${id} not found`);
-        }
-        return true;
+    async delete(id: string): Promise<DeleteResult> {
+        return await this.userRepository.delete(id)
     }
 
-    /// falta implementar findByEmail
+ 
 }

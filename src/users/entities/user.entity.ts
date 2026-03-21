@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -32,9 +31,17 @@ export class User {
     })
     password: string;
 
-    constructor(user?: Partial<User>) {
+    @ApiProperty({ example: [1, 2, 3], description: 'The dragon ball Z ids of the user' })
+    @Column("int", { array: true, default: [] })
+    dragonBallZIds?: number[] = [];
+
+    constructor(user?: User) {
         if (user) {
-            Object.assign(this, user);
+            this.id = user.id;
+            this.name = user.name;
+            this.email = user.email;
+            this.dragonBallZIds = user.dragonBallZIds ?? [];
         }
     }
+
 }

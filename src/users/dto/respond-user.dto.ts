@@ -11,9 +11,13 @@ export class RespondUserDto {
     @ApiProperty({ example: 'john.doe@example.com', description: 'The email address of the user' })
     email: string;
 
+    @ApiProperty({ example: [1, 2, 3], description: 'The dragon ball z ids of the user' })
+    dragonBallZIds?: number[] ;
+
     constructor(user: User){
         this.id = user.id;
         this.name = user.name;
         this.email = user.email;
+        this.dragonBallZIds = user.dragonBallZIds ?? [];
     }
 }
