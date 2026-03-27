@@ -62,7 +62,7 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto): Promise<RespondUserDto> {
 
     await this.findById(id);
-    
+
     const email = await this.usersRepository.findAllEmail({ email: updateUserDto.email });
 
     if (email.length === 1 && email[0].id !== id) {
@@ -89,5 +89,6 @@ export class UsersService {
     }
 
     return true
+
   }
 }

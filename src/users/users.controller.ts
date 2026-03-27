@@ -96,16 +96,7 @@ export class UsersController {
       }
     }
   })
-  @ApiInternalServerErrorResponse({
-    description: 'Internal server error',
-    schema: {
-      example: {
-        message: 'Internal server error',
-        error: 'Internal Server Error',
-        statusCode: 500,
-      },
-    },
-  })
+
   async findById(@Param('id') id: string): Promise<RespondUserDragonBallZDto | undefined> {
     return this.usersService.findByIdwIThDragonBallZ(id);
   }
@@ -152,7 +143,7 @@ export class UsersController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user' })
   @ApiParam({ name: 'id', description: 'User id' })
-  @ApiResponse({ status: 200, description: 'The user has been successfully deleted.' })
+  @ApiResponse({ status: 200, description: 'OK', type: Boolean })
   @ApiResponse({
     status: 404, description: 'User not found.', schema: {
       example: {

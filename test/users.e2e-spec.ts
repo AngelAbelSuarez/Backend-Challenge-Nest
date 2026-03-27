@@ -13,7 +13,7 @@ describe('UsersController (e2e)', () => {
     let testContext: TestAppContext;
     let app: INestApplication;
     let usersRepository: Repository<User>;
-    let axiosService: jest.SpyInstance;
+    let axiosGetService: jest.SpyInstance;
 
     beforeAll(async () => {
         // Inicializar la aplicación de prueba
@@ -24,7 +24,7 @@ describe('UsersController (e2e)', () => {
 
         usersRepository = testContext.usersRepository;
 
-        axiosService = jest.spyOn(axios, 'get').mockImplementation((url: string) => {
+        axiosGetService = jest.spyOn(axios, 'get').mockImplementation((url: string) => {
             if (url.includes('dragonball-api.com')) {
                 const id = getDragonBallZIdFromUrl(url);
                 if (id !== null) {
@@ -38,6 +38,8 @@ describe('UsersController (e2e)', () => {
     });
 
     afterAll(async () => {
+
+        axiosGetService.mockRestore();
         // Limpiar después de todos los tests
         await closeTestApp(testContext);
     });
@@ -45,6 +47,7 @@ describe('UsersController (e2e)', () => {
     beforeEach(async () => {
         //Restaurar spy después de cada test
         await resetTestApp(testContext);
+        axiosGetService.mockClear();
 
     });
 
@@ -229,13 +232,42 @@ describe('UsersController (e2e)', () => {
 
             const response = await request(app.getHttpServer())
                 .patch(`/users/${createdUser.body.id}`)
-                .send({...userData, email: userData2.email})
+                .send({ ...userData, email: userData2.email })
                 .expect(409);
 
             const body = response.body as any;
             expect(body.message).toBe('Email already exists');
             expect(body.error).toBe('Conflict');
             expect(body.statusCode).toBe(409);
+        })
+    });
+
+    describe('DELETE /users/:id', () => {
+        it('It should respond 200 code when deleting a user successfully', async () => {
+            const createdUser = await request(app.getHttpServer())
+                .post('/users')
+                .send(userData)
+                .expect(201);
+
+            const response = await request(app.getHttpServer())
+                .delete(`/users/${createdUser.body.id}`)
+                .expect(200);
+            console.log(createdUser.body.id)
+            console.log(response.body)
+            const body = response.body as any;
+            expect(body).toBeDefined();
+            expect(body).toBe(true);
+        })
+
+        it('It should respond 404 code when deleting a user that does not exist', async () => {
+            const response = await request(app.getHttpServer())
+                .delete(`/users/${idUserNotFound}`)
+                .expect(404);
+
+            const body = response.body as any;
+            expect(body.message).toBe(`User with id ${idUserNotFound} not found`);
+            expect(body.error).toBe('Not Found');
+            expect(body.statusCode).toBe(404);
         })
     });
 });

@@ -5,10 +5,9 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 export const databaseProvider = {
   provide: 'DATABASE_CONFIG',
   useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
-    // Determinar si estamos en entorno de pruebas
+
     const isTest = process.env.NODE_ENV === 'test';
 
-    // Configuración base
     const baseConfig: TypeOrmModuleOptions = {
       type: 'postgres',
       host: configService.get<string>('POSTGRES_DB_HOST') || 'localhost',
@@ -17,7 +16,7 @@ export const databaseProvider = {
       password: configService.get<string>('POSTGRES_DB_PASSWORD') || '123456a',
       database: configService.get<string>('POSTGRES_DB_DATABASE') || 'postgres',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     };
 
     if (isTest) {
