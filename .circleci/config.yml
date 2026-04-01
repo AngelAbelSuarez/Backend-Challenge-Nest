@@ -13,8 +13,8 @@ jobs:
           POSTGRES_DB_PASSWORD:postgres
           POSTGRES_DB_NAME:usersdb_test
           POSTGRES_DB_SYNC:true
-          DRAGONBALL_API_URL:'https://dragonball-api.com/api/characters'
-          COVERALLS_REPO_TOKEN:'dHYyDqC6S2EXTfF7ssDh02ZSjRjUWh2zA'
+          DRAGONBALL_API_URL:https://dragonball-api.com/api/characters
+          COVERALLS_REPO_TOKEN:dHYyDqC6S2EXTfF7ssDh02ZSjRjUWh2zA
       # Service container image
       - image: cimg/postgres:16.11
         environment:
