@@ -1,23 +1,24 @@
-# version: 2.1
+version: 2.1
+
 orbs:
   node: circleci/node@5.0.2
-  # Remove the coveralls orb
 
 jobs:
   build_and_test:
     docker:
       - image: cimg/node:22.14.0
         environment:
-          POSTGRES_DB_HOST=0.0.0.0
-          POSTGRES_DB_PORT=5432
-          POSTGRES_DB_USER=postgres
-          POSTGRES_DB_PASSWORD=postgres
-          POSTGRES_DB_NAME=usersdb_test
-          POSTGRES_DB_SYNC=true
-          DRAGONBALL_API_URL='https://dragonball-api.com/api/characters'
+          POSTGRES_DB_HOST: 0.0.0.0
+          POSTGRES_DB_PORT: 5432
+          POSTGRES_DB_USER: postgres
+          POSTGRES_DB_PASSWORD: postgres
+          POSTGRES_DB_NAME: usersdb_test
+          POSTGRES_DB_SYNC: true
+          DRAGONBALL_API_URL: 'https://dragonball-api.com/api/characters'
       - image: cimg/postgres:16.11
         environment:
           POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: usersdb_test
     steps:
       - checkout
@@ -28,14 +29,14 @@ jobs:
           name: Run tests with coverage
           command: npm run test:cov
           environment:
-            COVERALLS_REPO_TOKEN: gLskLgZ58OYgHYPem2MLSnox65zICVe8t
+            COVERALLS_REPO_TOKEN: $COVERALLS_REPO_TOKEN
       - run:
           name: Upload to Coveralls
           command: |
             npm install coveralls --save-dev
             cat ./coverage/lcov.info | ./node_modules/.bin/coveralls --verbose
           environment:
-            COVERALLS_REPO_TOKEN: gLskLgZ58OYgHYPem2MLSnox65zICVe8t
+            COVERALLS_REPO_TOKEN: $COVERALLS_REPO_TOKEN
       - run:
           name: Build app
           command: npm run build
