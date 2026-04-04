@@ -15,7 +15,7 @@ import {
   userData,
   userData2,
 } from './mocks/users.mock';
-import { RespondUserDto, RespondUserDragonBallZDto } from '@/users/dto';
+import { RespondUserDto, RespondUserDragonBallZDto } from '../src/users/dto';
 import axios from 'axios';
 
 describe('UsersController (e2e)', () => {

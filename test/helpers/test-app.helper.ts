@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { User } from '@/users/entities/user.entity';
-import { AppModule } from '@/app.module';
+import { User } from '../../src/users/entities/user.entity';
+import { AppModule } from '../../src/app.module';
 
 export interface TestAppContext {
   app: INestApplication;
