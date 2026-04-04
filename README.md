@@ -4,7 +4,9 @@
 
 ## Badges
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/8Vocs9Wi1dzq3hdj7Xm8N6/N9MMdbw5wW2iDNfKkgAq7C/tree/circleci-project-setup.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/8Vocs9Wi1dzq3hdj7Xm8N6/N9MMdbw5wW2iDNfKkgAq7C/tree/circleci-project-setup)
+[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/8Vocs9Wi1dzq3hdj7Xm8N6/N9MMdbw5wW2iDNfKkgAq7C/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/8Vocs9Wi1dzq3hdj7Xm8N6/N9MMdbw5wW2iDNfKkgAq7C/tree/main)
+
+[![Coverage Status](https://coveralls.io/repos/github/AngelAbelSuarez/Backend-Challenge-Nest/badge.svg)](https://coveralls.io/github/AngelAbelSuarez/Backend-Challenge-Nest)
 
 ## Features
 
